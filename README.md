@@ -2,7 +2,9 @@
 Linux tweaks/optimizations for Chromebook installations
 
 # Usage
-`tar -xvzf nochromo.tar.gz`
+Install your OS. Boot it. Download the repo and...
+
+`#tar -xvzf nochromo.tar.gz`
 
 `cd nochromo`
 
