@@ -1,0 +1,10 @@
+[Unit]
+Description=GalliumOS system customization for Chromebooks
+
+[Service]
+ExecStart=/usr/bin/init-laptop-settings
+Type=oneshot
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

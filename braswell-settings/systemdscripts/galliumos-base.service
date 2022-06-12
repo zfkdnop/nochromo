@@ -1,0 +1,10 @@
+[Unit]
+Description=GalliumOS system customization (galliumos-base)
+
+[Service]
+ExecStart=/usr/bin/init-galliumos-opts
+Type=oneshot
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

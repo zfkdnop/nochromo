@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Original: https://gist.github.com/mbaez/9271180
+# Modded by: Hugh Greenberg <hugegreenbug@gmail.com>
+
+#./change-brightness.sh -30 //reduce the brightness
+#./change-brightness.sh 30 //add brightness
+
+if [ -z $1 ]; then
+   echo "Missing brightness change"
+   exit 1
+fi
+
+path=/sys/class/backlight/intel_backlight
+
+MAX=`cat $path/max_brightness`
+ACTUAL=`cat $path/actual_brightness`
+NEW=`echo "$1 + $ACTUAL"|bc`
+if [ $NEW -lt 50 ]; then
+  NEW="50"
+  exit 0
+elif [ $NEW -gt $MAX ]; then
+  NEW=$MAX
+  exit 0
+fi 
+
+echo $NEW > $path/brightness
+
+#show notification
+PERCENTAGE=`echo "$NEW/$MAX * 100" | bc -l`
+LAST_ID_FILE="/tmp/change-brightness-id-$USER"
+
+if [ -f $LAST_ID_FILE ]
+then
+  LAST_ID=`flock -s $LAST_ID_FILE cat $LAST_ID_FILE`
+  if [ -n $LAST_ID ]; then
+     flock -e $LAST_ID_FILE notify-send -a brightness -i xfpm-brightness-lcd -h int:value:$PERCENTAGE "Brightness ${PERCENTAGE}%" -r $LAST_ID -p > $LAST_ID_FILE
+  else
+     flock -e $LAST_ID_FILE notify-send -a brightness -i xfpm-brightness-lcd -h int:value:$PERCENTAGE "Brightness ${PERCENTAGE}%" -p > $LAST_ID_FILE
+  fi
+else
+  flock -e $LAST_ID_FILE notify-send -a brightness -i xfpm-brightness-lcd -h int:value:$PERCENTAGE "Brightness ${PERCENTAGE}%" -p > $LAST_ID_FILE
+fi

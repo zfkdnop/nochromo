@@ -1,0 +1,26 @@
+#!/bin/sh
+# galliumos.patch has been applied to this file
+
+# load dependency modules
+#NRDEVICES=$(grep -c ^processor /proc/cpuinfo | sed 's/^0$/1/')
+NRDEVICES=1
+if modinfo zram | grep -q ' zram_num_devices:' 2>/dev/null; then
+  MODPROBE_ARGS="zram_num_devices=${NRDEVICES}"
+elif modinfo zram | grep -q ' num_devices:' 2>/dev/null; then
+  MODPROBE_ARGS="num_devices=${NRDEVICES}"
+else
+  exit 1
+fi
+modprobe zram $MODPROBE_ARGS
+
+# Calculate memory to use for zram (1.5 X total ram)
+totalmem=`LC_ALL=C free | grep -e "^Mem:" | sed -e 's/^Mem: *//' -e 's/  *.*//'`
+mem=`echo "$totalmem * 1.50 * 1024" | bc`
+
+# initialize the devices
+DEVNUMBER=0
+echo lz4 > /sys/block/zram${DEVNUMBER}/comp_algorithm
+echo 2 > /sys/block/zram${DEVNUMBER}/max_comp_streams
+echo $mem > /sys/block/zram${DEVNUMBER}/disksize
+mkswap /dev/zram${DEVNUMBER}
+swapon -p -1 /dev/zram${DEVNUMBER}
