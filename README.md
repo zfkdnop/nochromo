@@ -1,5 +1,7 @@
 # nochromo
-Linux tweaks/optimizations for Chromebook installations
+Tweaks/optimizations for Braswell chromebook Linux installations
+
+All credit goes to GalliumOS. Tweaks & optimizations are taken from the Braswell (galliumos-braswell) repo
 
 # Usage
 Install your OS. Boot it. Download the repo and...
