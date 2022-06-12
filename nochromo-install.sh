@@ -67,3 +67,7 @@ sudo chmod 644 /usr/share/X11/xorg.conf.d/20-intel.conf
 ## if brightness keys still dont work for you...
 ## setup keyboard shortcuts
 # use XFCE keyboard settings > application shortcuts to set up shortcuts for /usr/bin/change-brightness <XXX|-XXX>
+
+echo config tweaks installed.. reboot
+echo if your brightness keys dont work, open nochromo-install.sh and read the bottom of the file
+echo also, see the part about XKBMODEL="chromebook" in /etc/default/keyboard
